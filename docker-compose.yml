@@ -1,0 +1,47 @@
+name: dss-tracker
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Монтирую локальную папку src в контейнер, чтобы изменения в коде сразу отражались в контейнере (для разработки)
+      - ./src:/backend/src
+      - static_data:/backend/src/staticfiles/
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    command: python manage.py runserver 0.0.0.0:${BACKEND_PORT}
+
+  db:
+    build:
+      context: ./db
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    # healthcheck для проверки состояния базы данных, чтобы приложение не запускалось, пока база не готова
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - backend
+    volumes:
+      - static_data:/backend/src/staticfiles
+    command: [ "nginx", "-g", "daemon off;" ]
+    restart: always
+
+volumes:
+  pg_data:
+  static_data:
