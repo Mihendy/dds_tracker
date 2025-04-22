@@ -43,9 +43,6 @@ command:
 shell:
 	$(MANAGE) shell
 
-debug:
-	$(MANAGE) debug
-
 piplock:
 	pipenv install
 	sudo chown -R ${USER} Pipfile.lock

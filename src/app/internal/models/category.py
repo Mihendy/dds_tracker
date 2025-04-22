@@ -4,6 +4,7 @@ from app.internal.models.transaction_type import TransactionType
 
 
 class Category(models.Model):
+    """Модель для категорий транзакций"""
     name = models.CharField(max_length=100)
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.PROTECT, related_name='categories')
 
