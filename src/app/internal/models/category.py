@@ -6,7 +6,7 @@ from app.internal.models.transaction_type import TransactionType
 class Category(models.Model):
     """Модель для категорий транзакций"""
     name = models.CharField(max_length=100)
-    transaction_type = models.ForeignKey(TransactionType, on_delete=models.PROTECT, related_name='categories')
+    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, related_name='categories')
 
     class Meta:
         unique_together = ('name', 'transaction_type')  # уникальность в рамках типа, но название может повторяться

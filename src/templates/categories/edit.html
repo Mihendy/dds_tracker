@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать категорию{% endblock %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Редактировать категорию</h5>
+        <a href="{% url 'directory_tree' %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+    </div>
+    <div class="card-body">
+
+
+        <form method="post" class="mb-3">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">{{ field.label }}</span>
+                {{ field|add_class:"form-control" }}
+            </div>
+            {% endfor %}
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Обновить</button>
+            </div>
+        </form>
+
+        <form action="{% url 'category_delete' object.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                Удалить
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -24,11 +24,13 @@ class Transaction(models.Model):
 
     def clean(self):
         """Проверка на соответствие категории и подкатегории"""
+        errors = {}
+
         if self.category.transaction_type != self.type:
-            raise ValidationError(
-                _("Category does not match the selected transaction type.")
-            )
+            errors['category'] = _("Категория не соответствует выбранному типу транзакции.")
+
         if self.subcategory.category != self.category:
-            raise ValidationError(
-                _("Subcategory does not match the selected category.")
-            )
+            errors['subcategory'] = _("Подкатегория не соответствует выбранной категории.")
+
+        if errors:
+            raise ValidationError(errors)
