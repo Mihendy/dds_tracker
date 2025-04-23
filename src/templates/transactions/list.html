@@ -1,15 +1,91 @@
 {% extends 'base.html' %}
 {% block title %}Список записей{% endblock %}
+{% load widget_tweaks %}
+{% load static %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Записи</h1>
-    <a href="{% url 'transaction_create' %}" class="btn btn-primary">Создать запись</a>
+    <div>
+        <a href="{% url 'transaction_create' %}" class="btn btn-primary">Создать запись</a>
+        <a href="{% url 'directory_tree' %}" class="btn btn-secondary">К справочникам</a>
+    </div>
+
 </div>
 
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Фильтры</h5>
+    </div>
+    <div class="card-body mt-4">
+        <form method="get">
+            <div class="row g-2">
+                <!-- Дата с / по -->
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <div class="input-group">
+                            <span class="input-group-text">Дата:</span>
+                            {{ form.created_at__gte|add_class:"form-control" }}
+                            <span class="input-group-text">—</span>
+                            {{ form.created_at__lte|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    <!-- Статус -->
+                    <div class="col-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-check-circle-fill"></i>&nbsp;Статус</span>
+                            {{ form.status|add_class:"form-control" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Тип -->
+                    <div class="col">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-shuffle"></i>&nbsp;Тип</span>
+                            {{ form.type|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    <!-- Категория -->
+                    <div class="col">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-tags-fill"></i>&nbsp;Категория</span>
+                            {{ form.category|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    <!-- Подкатегория -->
+                    <div class="col">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-tag-fill"></i>&nbsp;Подкатегория</span>
+                            {{ form.subcategory|add_class:"form-control" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-end">
+                    <!-- Кнопка фильтра -->
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Применить</button>
+                    </div>
+
+                    <!-- Кнопка сброса фильтров -->
+                    <div class="col-auto">
+                        <a href="{% url 'transaction_list' %}" class="btn btn-secondary">Сбросить</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% if transactions %}
 {% include 'transactions/_transaction_table.html' %}
 {% else %}
 <div class="alert alert-warning">Нет доступных записей.</div>
 {% endif %}
+<script src="{% static 'js/transactions.js' %}"></script>
+
 {% endblock %}

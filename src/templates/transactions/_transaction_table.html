@@ -1,37 +1,43 @@
-<div class="card shadow-sm">
-    <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-            <tr>
-                <th>Дата</th>
-                <th>Статус</th>
-                <th>Тип</th>
-                <th>Категория</th>
-                <th>Подкатегория</th>
-                <th>Сумма</th>
-                <th>Комментарий</th>
-                <th class="text-end">Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.created_at|date:"d.m.Y" }}</td>
-                <td>{{ transaction.status.name }}</td>
-                <td>{{ transaction.type.name }}</td>
-                <td>{{ transaction.category.name }}</td>
-                <td>{{ transaction.subcategory.name }}</td>
-                <td>{{ transaction.amount }} ₽</td>
-                <td>{{ transaction.comment }}</td>
-                <td class="text-end">
-                    <a href="{% url 'transaction_update' transaction.id %}"
-                       class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-pencil-fill"></i>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+<table class="table table-hover table-bordered table-striped mb-0">
+    <thead class="table-light">
+    <tr>
+        <th>Дата</th>
+        <th>Статус</th>
+        <th>Тип</th>
+        <th>Категория</th>
+        <th>Подкатегория</th>
+        <th>Сумма</th>
+        <th>Комментарий</th>
+        <th class="text-end">Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for transaction in transactions %}
+    <tr id="transaction-row-{{ transaction.id }}">
+        <td>{{ transaction.created_at|date:"d.m.Y" }}</td>
+        <td>{{ transaction.status.name }}</td>
+        <td>{{ transaction.type.name }}</td>
+        <td>{{ transaction.category.name }}</td>
+        <td>{{ transaction.subcategory.name }}</td>
+        <td>{{ transaction.amount }} ₽</td>
+        <td>{{ transaction.comment }}</td>
+        <td class="text-end">
+            <a href="{% url 'transaction_update' transaction.id %}"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-pencil-fill"></i>
+            </a>
+            <button onclick="deleteTransaction({{ transaction.id }}, csrfToken)"
+                    class="btn btn-sm btn-danger delete-btn"
+                    data-id="{{ transaction.id }}">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    const csrfToken = '{{ csrf_token }}';
+</script>
+

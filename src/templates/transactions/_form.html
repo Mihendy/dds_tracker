@@ -2,44 +2,35 @@
 
 <form method="post">
     {% csrf_token %}
+    {{ form.non_field_errors }}
 
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-calendar-event"></i>&nbsp;&nbsp;Дата</span>
-        {{ form.created_at|add_class:"form-control" }}
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-check-circle-fill"></i>&nbsp;&nbsp;Статус</span>
-        {{ form.status|add_class:"form-control" }}
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-shuffle"></i>&nbsp;&nbsp;Тип</span>
-        {{ form.type|add_class:"form-control" }}
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-tags-fill"></i>&nbsp;&nbsp;Категория</span>
-        {{ form.category|add_class:"form-control" }}
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-tag-fill"></i>&nbsp;&nbsp;Подкатегория</span>
-        {{ form.subcategory|add_class:"form-control" }}
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-currency-ruble"></i>&nbsp;&nbsp;Сумма</span>
-        {{ form.amount|add_class:"form-control" }}
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text"><i class="bi bi-chat-dots-fill"></i>&nbsp;&nbsp;Комментарий</span>
-        {{ form.comment|add_class:"form-control" }}
-    </div>
+    {% for field in form.visible_fields %}
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text">
+                    {% if field.name == "created_at" %}<i class="bi bi-calendar-event"></i>&nbsp;&nbsp;Дата{% endif %}
+                    {% if field.name == "status" %}<i class="bi bi-check-circle-fill"></i>&nbsp;&nbsp;Статус{% endif %}
+                    {% if field.name == "type" %}<i class="bi bi-shuffle"></i>&nbsp;&nbsp;Тип{% endif %}
+                    {% if field.name == "category" %}<i class="bi bi-tags-fill"></i>&nbsp;&nbsp;Категория{% endif %}
+                    {% if field.name == "subcategory" %}<i class="bi bi-tag-fill"></i>&nbsp;&nbsp;Подкатегория{% endif %}
+                    {% if field.name == "amount" %}<i class="bi bi-currency-ruble"></i>&nbsp;&nbsp;Сумма{% endif %}
+                    {% if field.name == "comment" %}<i class="bi bi-chat-dots-fill"></i>&nbsp;&nbsp;Комментарий{% endif %}
+                </span>
+                {% if field.errors %}
+                    {{ field|add_class:"form-control is-invalid" }}
+                {% else %}
+                    {{ field|add_class:"form-control" }}
+                {% endif %}
+            </div>
+            {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ field.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
 
     <div class="d-grid gap-2 pt-3">
-        <button type="submit" class="btn btn-success btn-lg">Сохранить</button>
+        <button type="submit" class="btn btn-success">Сохранить</button>
     </div>
 </form>
